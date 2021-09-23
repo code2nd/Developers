@@ -1,0 +1,23 @@
+.logo {
+  height: 64px;
+  padding-left: 30px;
+  overflow: hidden;
+  color: #000000;
+  font-size: 18px;
+  font-family: Avenir, -apple-system, BlinkMacSystemFont, segoe ui, Roboto,
+    helvetica neue, Arial, noto sans, sans-serif, apple color emoji,
+    segoe ui emoji, segoe ui symbol, noto color emoji, sans-serif;
+  line-height: 64px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.logo-img {
+  position: relative;
+  top: -2px;
+  margin-right: 4px;
+  width: 60px;
+  height: 36px;
+  vertical-align: middle;
+  border-style: none;
+}

@@ -1,0 +1,12 @@
+export const MODAL_VISIBLE = 'modal_visible';
+export const MODAL_TYPE = 'modal_type';
+export const PAGE_TYPE = 'page_type';
+export const SELECTED_ROW_KEYS = 'selected_row_keys';
+export const TIPS = 'tips';
+export const TABLE_DATA = 'table_data';
+export const PAGE = 'page';
+export const PAGE_SIZE = 'page_size'
+export const TOTAL = 'total';
+export const CATEGORY_LIST = 'category_list';
+export const AUTH_MENU = 'auth_menu';
+export const REQUEST_COMPLETE = 'request_complete';

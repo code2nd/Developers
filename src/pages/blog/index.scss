@@ -1,0 +1,32 @@
+.blog-wrapper {
+  height: 100%;
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  .ant-col {
+    width: 100%;
+    .ant-radio-button-wrapper {
+      border: none;
+      border-radius: 12px;
+    }
+  }
+
+  .list-loading-container {
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .blog-list {
+    margin-top: 16px;
+    padding: 20px;
+    background: #ffffff;
+    .ant-list-item-meta-description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

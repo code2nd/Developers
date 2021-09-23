@@ -1,0 +1,41 @@
+.drawer-handle-btn {
+  position: absolute;
+  top: 72px;
+  right: -40px;
+  width: 41px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 0;
+  text-align: center;
+  line-height: 40px;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  box-shadow: 2px 0 8px #00000026;
+  border-radius: 0 4px 4px 0;
+}
+
+.drawer-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  overflow: visible;
+  z-index: 1;
+
+  .fake-drawer-handle-btn {
+    @extend .drawer-handle-btn;
+  }
+}
+
+.custom-drawer {
+  .ant-drawer-content {
+    overflow: visible;
+    .drawer-handle-btn {
+      @extend .drawer-handle-btn;
+    }
+  }
+}

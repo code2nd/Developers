@@ -1,0 +1,11 @@
+export const ADD_BLOG_LIST = 'add_blog_list';
+export const SET_BLOG_LIST = 'set_blog_list';
+export const SET_PAGE = 'set_page';
+export const SET_PAGE_SIZE = 'set_page_size';
+export const SET_TOTAL = 'set_total';
+export const SET_LOADING = 'set_loading';
+export const SET_HAS_MORE = 'set_has_more';
+export const SET_BLOG_CATEGORY = 'set_blog_category';
+export const SET_CATEGORY = 'set_category';
+export const SET_DATE = 'set_date';
+export const INIT_STATE = 'init_state';
