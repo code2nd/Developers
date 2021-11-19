@@ -142,7 +142,7 @@ const BaseForm = forwardRef<any, BaseFormProps>((props, ref) => {
   }; */
 
   const normFile = useCallback((e: any) => {
-    getBase64(e.file, (imageUrl) => {
+    getBase64(e.file, (imageUrl: any) => {
       setImageUrl(imageUrl);
     });
 

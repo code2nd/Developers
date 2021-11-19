@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import UpDownLayout from "container/upDownLayout";
 import LoadPage from "../components/loadPage";
-import AuthRoute from './authRoute';
+import AuthRoute from "./authRoute";
 
 const Router = () => {
   return (

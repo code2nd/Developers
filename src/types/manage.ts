@@ -1,11 +1,19 @@
 import React from "react";
-import { TableData } from 'components/baseTable';
-import { HandleType } from 'components/baseForm';
-import { BlogInfo, BlogListData, UpdateBlogInfo, UpdateWebInfoData, WebInfoData, WebsiteListData } from 'types/api';
-import { ModalType } from 'pages/manage/components/modal';
+import { TableData } from "components/baseTable";
+import { HandleType } from "components/baseForm";
+import {
+  BlogInfo,
+  BlogListData,
+  UpdateBlogInfo,
+  UpdateWebInfoData,
+  WebInfoData,
+  WebsiteListData,
+} from "types/api";
+import { ModalType } from "pages/manage/components/modal";
 import { KeyValue } from "./form";
 
 export interface ManageProps extends ManageState {
+  currentPage: string;
   handleSetModalType: (type: ModalType) => void;
   handleSetModalVisible: (visible: boolean) => void;
   handleSetPageType: (pageType: PageType) => void;
@@ -18,19 +26,25 @@ export interface ManageProps extends ManageState {
   hanldeClearTableData: () => void;
   handleGetWebsiteCategory: (type: string) => void;
   handleGetBlogCategory: (type: string) => void;
-  handleGetBlogData: ({page, pageSize}: BlogListData) => void;
-  handleGetWebsiteData: ({page, pageSize}: WebsiteListData) => void;
+  handleGetBlogData: ({ page, pageSize }: BlogListData) => void;
+  handleGetWebsiteData: ({ page, pageSize }: WebsiteListData) => void;
   handleAddWebsiteCategory: (category: string) => void;
   handleUpdateWebsiteCategory: (key: number, category: string) => void;
   handleDeleteWebsiteCategory: (key: string) => void;
   handleAddWebsite: (webInfo: WebInfoData) => void;
-  handleUpdateWebsite: (updateWebInfo: UpdateWebInfoData, searchParam: ManageSearchParam) => void;
+  handleUpdateWebsite: (
+    updateWebInfo: UpdateWebInfoData,
+    searchParam: ManageSearchParam
+  ) => void;
   handleDeleteWebsite: (key: string, searchParam: ManageSearchParam) => void;
   handleAddBlogCategory: (category: string) => void;
   handleUpdateBlogCategory: (key: number, category: string) => void;
   handleDeleteBlogCategory: (key: string) => void;
   handleAddBlog: (blogInfo: BlogInfo) => void;
-  handleUpdateBlog: (updateBlogInfo: UpdateBlogInfo, searchParam: ManageSearchParam) => void;
+  handleUpdateBlog: (
+    updateBlogInfo: UpdateBlogInfo,
+    searchParam: ManageSearchParam
+  ) => void;
   handleDeleteBlog: (key: string, searchParam: ManageSearchParam) => void;
   handleGetMenu: () => void;
 }
@@ -44,7 +58,7 @@ export interface ManageState {
   tableData: TableData;
   page: number;
   pageSize: number;
-  total: number,
+  total: number;
   categoryList: Array<KeyValue>;
   authMenu: Array<AuthMenu>;
   requestComplete: boolean;
@@ -55,9 +69,20 @@ export interface ManageAction extends ManageState {
   handle?: HandleType;
 }
 
-export type PageType = 'website' | 'blog' | 'websiteCategory' | 'blogCategory' | ''; 
+export type PageType =
+  | "website"
+  | "blog"
+  | "websiteCategory"
+  | "blogCategory"
+  | "";
 
-export type TipsLevel = 'success' | 'error' | 'info' | 'warning' | 'warn' | 'loading';
+export type TipsLevel =
+  | "success"
+  | "error"
+  | "info"
+  | "warning"
+  | "warn"
+  | "loading";
 
 export interface Tips {
   show: boolean;
@@ -71,7 +96,7 @@ export interface ManageSearchParam {
   pageSize: number;
   category?: number;
   keyword?: string;
-  dateTime?:string;
+  dateTime?: string;
 }
 
 export interface AuthMenu {

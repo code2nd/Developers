@@ -55,7 +55,7 @@ export const actionGetWebsiteList = () => {
       try {
         const res = await getClassifiedWeblist();
         dispatch(setWebSiteList(res));
-        LStorage.set('webSiteList', res, false);
+        LStorage.set('webSiteList', res);
       } catch(err) {
         console.error(err);
       }

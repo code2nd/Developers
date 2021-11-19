@@ -28,7 +28,6 @@ const COLORS = [
   "powderblue",
   "rosybrown",
   "royalblue",
-  "rubine",
   "saddlebrown",
   "salmon",
   "sandybrown",

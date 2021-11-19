@@ -4,14 +4,14 @@ import React, {
   useLayoutEffect,
   useEffect,
   useMemo,
-  useRef
+  useRef,
 } from "react";
 import { Layout, message } from "antd";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { useLocation } from "react-router-dom";
 import _ from "lodash";
-import moment from 'moment';
+import moment from "moment";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 import {
   manageWebsiteFilterForm,
@@ -19,7 +19,7 @@ import {
   manageCategoryForm,
   manageWebsiteSubmitForm,
   manageBlogSubmitForm,
-  manageBlogFilterForm
+  manageBlogFilterForm,
 } from "utils/formConfig";
 import LeftRightLayout from "container/leftRightLayout";
 import Menu from "./components/menu";
@@ -45,12 +45,12 @@ import {
   websiteListColumns,
   blogListColumns,
 } from "utils/tableConfig";
-import Storage from 'utils/storage';
+import Storage from "utils/storage";
 import { handleCancelRequest } from "utils/tools";
 import "./index.scss";
 
 const { Content, Header } = Layout;
-const LStorage = new Storage('localStorage', 60*24);
+const LStorage = new Storage("localStorage", 60 * 24);
 
 export const pageMap = {
   w: "website",
@@ -73,6 +73,7 @@ const Manage: FC<ManageProps> = (props) => {
     categoryList,
     authMenu,
     requestComplete,
+    currentPage,
     handleSetPage,
     handleSetTotal,
     handleSetPageType,
@@ -95,7 +96,7 @@ const Manage: FC<ManageProps> = (props) => {
     handleAddBlog,
     handleUpdateBlog,
     handleDeleteBlog,
-    handleGetMenu
+    handleGetMenu,
   } = props;
   const location = useLocation();
 
@@ -128,11 +129,11 @@ const Manage: FC<ManageProps> = (props) => {
   // 表格大小
   const tableSize = useMemo(() => {
     if (pageType === pageMap.w || pageType === pageMap.b) {
-      return 'middle' as SizeType;
+      return "middle" as SizeType;
     } else {
-      return 'default' as SizeType;
+      return "default" as SizeType;
     }
-  }, [pageType])
+  }, [pageType]);
 
   const defaultFieldsValue = useMemo(() => {
     if (tableData.length && selectedRowKeys.length && modalType !== "delete") {
@@ -145,7 +146,7 @@ const Manage: FC<ManageProps> = (props) => {
           };
         case pageMap.b:
         case pageMap.w:
-          let date = Reflect.get(data as object, 'date');
+          let date = Reflect.get(data as object, "date");
           date = date ? { date: moment(date) } : {};
           const { category, category_id, ...rest } = data as any;
           return { ...rest, category: category_id, ...date };
@@ -171,33 +172,39 @@ const Manage: FC<ManageProps> = (props) => {
   }, [pageType]);
 
   const memoedFilterForm = useMemo(() => {
-    return location.hash.substring(1) === 'w' ? manageWebsiteFilterForm(categoryList) : manageBlogFilterForm(categoryList);
+    return location.hash.substring(1) === "w"
+      ? manageWebsiteFilterForm(categoryList)
+      : manageBlogFilterForm(categoryList);
   }, [location, categoryList]);
 
   const memoedSubmitForm = useMemo(() => {
     const flag = location.hash.substring(1);
-    return ["wc", "bc"].includes(flag)
+    return ["wc", "bc"].includes(flag) ||
+      [pageMap.wc, pageMap.bc].includes(pageType)
       ? manageCategoryForm
-      : flag === 'w' ? manageWebsiteSubmitForm(categoryList) : manageBlogSubmitForm(categoryList);
-  }, [location, categoryList]);
+      : flag === "w" || pageType === "website"
+      ? manageWebsiteSubmitForm(categoryList)
+      : manageBlogSubmitForm(categoryList);
+  }, [location, categoryList, pageType]);
 
   const memoedTableData = useMemo(() => {
     if (!tableData[0] && !requestComplete) {
       return {
         total: handleGetStoragedData(pageType)?.length || 0,
-        dataSource: handleGetStoragedData(pageType) || []
-      }
+        dataSource: handleGetStoragedData(pageType) || [],
+      };
     }
 
     return {
       total,
-      dataSource: tableData
-    }
+      dataSource: tableData,
+    };
   }, [tableData, pageType, total, requestComplete]);
 
   const handleBtnClick = (field: HandleType) => {
     switch (field) {
       case "add":
+        props.handleSetSelectedRowKeys([]);
         props.handleSetModalType(field);
         props.handleSetModalVisible(true);
         break;
@@ -264,7 +271,10 @@ const Manage: FC<ManageProps> = (props) => {
           break;
         case pageMap.b:
           baseFormRef.current = {};
-          handleAddBlog({ ...data, date: moment(data.date).format('YYYY-MM-DD') });
+          handleAddBlog({
+            ...data,
+            date: moment(data.date).format("YYYY-MM-DD"),
+          });
           break;
         case pageMap.bc:
           {
@@ -279,14 +289,17 @@ const Manage: FC<ManageProps> = (props) => {
       handleAddWebsiteCategory,
       handleAddBlogCategory,
       handleAddWebsite,
-      handleAddBlog
+      handleAddBlog,
     ]
   );
 
   // 修改
   const handleUpdate = useCallback(
     (formData: any) => {
-      const momedSearchParam = { ...memoedPagenation, ...searchParamRef.current }
+      const momedSearchParam = {
+        ...memoedPagenation,
+        ...searchParamRef.current,
+      };
       switch (pageType) {
         case pageMap.w:
           handleUpdateWebsite(formData, momedSearchParam);
@@ -298,7 +311,10 @@ const Manage: FC<ManageProps> = (props) => {
           }
           break;
         case pageMap.b:
-          handleUpdateBlog({ ...formData, date: moment(formData.date).format('YYYY-MM-DD') }, momedSearchParam);
+          handleUpdateBlog(
+            { ...formData, date: moment(formData.date).format("YYYY-MM-DD") },
+            momedSearchParam
+          );
           break;
         case pageMap.bc:
           {
@@ -315,14 +331,14 @@ const Manage: FC<ManageProps> = (props) => {
       handleUpdateBlogCategory,
       handleUpdateWebsite,
       handleUpdateBlog,
-      memoedPagenation
+      memoedPagenation,
     ]
   );
 
   // 删除
   const handleDelete = useCallback(() => {
     const key = selectedRowKeys.join(",");
-    const momedSearchParam = { ...memoedPagenation, ...searchParamRef.current }
+    const momedSearchParam = { ...memoedPagenation, ...searchParamRef.current };
     switch (pageType) {
       case pageMap.w:
         handleDeleteWebsite(key, momedSearchParam);
@@ -344,7 +360,7 @@ const Manage: FC<ManageProps> = (props) => {
     handleDeleteBlogCategory,
     handleDeleteWebsite,
     handleDeleteBlog,
-    memoedPagenation
+    memoedPagenation,
   ]);
 
   const handleOk = useCallback(
@@ -354,7 +370,7 @@ const Manage: FC<ManageProps> = (props) => {
           handleAdd(formData);
           break;
         case "edit":
-          handleUpdate({...formData, key: selectedRowKeys[0]});
+          handleUpdate({ ...formData, key: selectedRowKeys[0] });
           break;
         case "delete":
           handleDelete();
@@ -365,47 +381,70 @@ const Manage: FC<ManageProps> = (props) => {
   );
 
   // 搜索
-  const handleSearch = useCallback((fieldsValue: any) => {
-    const { search, ...rest } = fieldsValue;
-    const initialPagenation = {page: initialState.page, pageSize: initialState.pageSize};
-    if (pageType === 'blog') {
-      let { date } = rest;
-      if (date) {
-        date = [date[0].format('YYYY-MM-DD'), date[1].format('YYYY-MM-DD')].join(',');
+  const handleSearch = useCallback(
+    (fieldsValue: any) => {
+      const { search, ...rest } = fieldsValue;
+      const initialPagenation = {
+        page: initialState.page,
+        pageSize: initialState.pageSize,
+      };
+      if (pageType === "blog") {
+        let { date } = rest;
+        if (date) {
+          date = [
+            date[0].format("YYYY-MM-DD"),
+            date[1].format("YYYY-MM-DD"),
+          ].join(",");
+        }
+        handleGetBlogData({ ...initialPagenation, ...rest, date });
+      } else {
+        handleGetWebsiteData({ ...initialPagenation, ...rest });
       }
-      handleGetBlogData({...initialPagenation, ...rest, date});
-    } else {
-      handleGetWebsiteData({...initialPagenation, ...rest});
-    }
 
-    handleSetPage(1);
-    searchParamRef.current = {page: 1, pageSize: 10, ...rest};
-  }, [pageType, handleSetPage, handleGetBlogData, handleGetWebsiteData])
+      handleSetPage(1);
+      searchParamRef.current = { page: 1, pageSize: 10, ...rest };
+    },
+    [pageType, handleSetPage, handleGetBlogData, handleGetWebsiteData]
+  );
 
   const handleTableRowSelected = (selectedRowKeys: Array<React.Key>) => {
     handleSetSelectedRowKeys(selectedRowKeys);
   };
 
-  const handlePageChange = (page: number, pageSize?: number) => {
-    handleSetPage(page);
-  };
+  const handlePageChange = useCallback(
+    (page: number, pageSize?: number) => {
+      if (selectedRowKeys[0]) {
+        handleSetSelectedRowKeys([]);
+      }
+
+      handleSetPage(page);
+    },
+    [selectedRowKeys, handleSetPage, handleSetSelectedRowKeys]
+  );
 
   function handleGetStoragedData(pageType: PageType) {
     switch (pageType) {
       case pageMap.w:
-        return LStorage.get('manageWebsiteList') || [];
+        return LStorage.get("manageWebsiteList") || [];
       case pageMap.wc:
-        return LStorage.get('websiteCategory') || [];
+        return LStorage.get("websiteCategory") || [];
       case pageMap.b:
-        return LStorage.get('manageBlogList') || [];
+        return LStorage.get("manageBlogList") || [];
       case pageMap.bc:
-        return LStorage.get('blogCategory') || [];
-      default: return [];
+        return LStorage.get("blogCategory") || [];
+      default:
+        return [];
     }
-  };
+  }
 
-  useLayoutEffect(() => {
-    function hashchange(hash: HashChangeEvent) {
+  useEffect(() => {
+    if (!location.hash) {
+      window.location.hash = "#b";
+    }
+  }, [location]);
+
+  useEffect(() => {
+    function hashchange() {
       baseFormRef.current && baseFormRef.current.resetFields();
       handleSetSelectedRowKeys([]);
       hanldeClearTableData();
@@ -418,7 +457,12 @@ const Manage: FC<ManageProps> = (props) => {
     return () => {
       window.removeEventListener("hashchange", hashchange);
     };
-  }, [handleSetSelectedRowKeys, hanldeClearTableData, handleSetPage, handleSetTotal]);
+  }, [
+    handleSetSelectedRowKeys,
+    hanldeClearTableData,
+    handleSetPage,
+    handleSetTotal,
+  ]);
 
   useEffect(() => {
     handleCancelRequest();
@@ -448,7 +492,7 @@ const Manage: FC<ManageProps> = (props) => {
   }, [tips, handleSetTips]);
 
   useEffect(() => {
-    switch(pageType) {
+    switch (pageType) {
       case pageMap.b:
         handleGetBlogData({ ...searchParamRef.current, page, pageSize });
         break;
@@ -469,7 +513,7 @@ const Manage: FC<ManageProps> = (props) => {
     handleGetBlogData,
     handleGetWebsiteData,
     handleGetBlogCategory,
-    handleGetWebsiteCategory
+    handleGetWebsiteCategory,
   ]);
 
   useEffect(() => {
@@ -481,6 +525,12 @@ const Manage: FC<ManageProps> = (props) => {
       }
     }
   }, [pageType, handleGetBlogCategory, handleGetWebsiteCategory]);
+
+  useEffect(() => {
+    return () => {
+      handleSetPageType(pageMap.b as PageType);
+    };
+  }, [currentPage, handleSetPageType]);
 
   return (
     <LeftRightLayout menu={<Menu data={authMenu} currentSelected={pageType} />}>
@@ -542,8 +592,9 @@ const mapStateToProps = (state: State) => {
       total,
       categoryList,
       authMenu,
-      requestComplete
+      requestComplete,
     },
+    common: { currentPage },
   } = state;
 
   return {
@@ -558,7 +609,8 @@ const mapStateToProps = (state: State) => {
     total,
     categoryList,
     authMenu,
-    requestComplete
+    requestComplete,
+    currentPage,
   };
 };
 

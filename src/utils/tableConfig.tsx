@@ -52,7 +52,8 @@ export const websiteListColumns = [
     title: '网站描述',
     dataIndex: 'description',
     align: 'center',
-    width: '30%'
+    width: '30%',
+    ellipsis: true,
   },
 ];
 
